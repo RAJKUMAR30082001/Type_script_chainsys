@@ -1,13 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 class GetDetails {
     constructor(product) {
         if (product) {
             this._nameofproduct = product.productname;
             this._quantity = product.quantity;
+            console.log(this._nameofproduct);
         }
     }
     get productname() {
+        console.log(this._nameofproduct, "worked");
         return this._nameofproduct;
     }
     get quantity() {
@@ -15,8 +15,8 @@ class GetDetails {
     }
 }
 class CalculatePrice extends GetDetails {
-    constructor() {
-        super(...arguments);
+    constructor(p) {
+        super(p);
         this.detailsInstance = new GetDetails();
         this.productDetailsVeg = {
             carrot: {
@@ -47,14 +47,16 @@ class CalculatePrice extends GetDetails {
             }
         };
     }
-    findProduct() {
-        const productname = this.detailsInstance.productname;
+    findProduct(name) {
+        const productname = name;
+        console.log(productname);
         if (Object.keys(this.productDetailsfruit).includes(productname)) {
             return 'Fruit';
         }
         else if (Object.keys(this.productDetailsVeg).includes(productname)) {
             return 'Vegetable';
         }
+        return "not a type";
     }
     calculatePriceVeg(name, quantity) {
         for (let i in this.productDetailsVeg) {
@@ -77,6 +79,7 @@ class CalculatePrice extends GetDetails {
 }
 const Button = document.getElementById('submit');
 Button.addEventListener('click', () => {
+    console.log("hi");
     const productName = document.getElementById('productName');
     const Quantity = document.getElementById('quantity');
     const name = productName.value;
@@ -87,7 +90,8 @@ Button.addEventListener('click', () => {
     }
     let price = 0;
     const CalculatePriceObj = new CalculatePrice({ productname: name, quantity: quantity });
-    const type = CalculatePriceObj.findProduct();
+    const type = CalculatePriceObj.findProduct(CalculatePriceObj.productname);
+    console.log(CalculatePriceObj.productname);
     if (!type) {
         alert('Invalid Product Name');
     }
@@ -105,3 +109,4 @@ Button.addEventListener('click', () => {
     else
         alert("no value");
 });
+export {};
