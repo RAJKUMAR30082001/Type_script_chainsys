@@ -8,10 +8,12 @@ class GetDetails implements product {
         if (product) {
             this._nameofproduct = product.productname;
             this._quantity = product.quantity;
+            console.log(this._nameofproduct)
         }
     }
 
     get productname(): string {
+        console.log(this._nameofproduct,"worked")
         return this._nameofproduct;
     }
 
@@ -22,6 +24,9 @@ class GetDetails implements product {
 
 class CalculatePrice extends GetDetails implements CalculatePriceInterface, product, Marketdetails {
     public detailsInstance = new GetDetails();
+    constructor(p:product){
+        super(p)
+    }
     public productDetailsVeg: { [key: string]: Marketdetails } = {
         carrot: {
             productname: 'carrot',
@@ -51,16 +56,18 @@ class CalculatePrice extends GetDetails implements CalculatePriceInterface, prod
         }
     };
 
-    findProduct(): string | undefined {
-        const productname: string = this.detailsInstance.productname;
+    findProduct(name:string): string {
+        const productname: string = name;
+        console.log(productname)
         if (Object.keys(this.productDetailsfruit).includes(productname)) {
             return 'Fruit';
         } else if (Object.keys(this.productDetailsVeg).includes(productname)) {
             return 'Vegetable';
         }
+        return "not a type"
     }
 
-    calculatePriceVeg(name: string, quantity: number): any {
+    calculatePriceVeg(name: string, quantity: number): number|any {
         for (let i in this.productDetailsVeg) {
             if (name === i) {
                 const price: number|any = this.productDetailsVeg[i].price;
@@ -84,6 +91,7 @@ class CalculatePrice extends GetDetails implements CalculatePriceInterface, prod
 const Button = document.getElementById('submit') as HTMLButtonElement;
 
 Button.addEventListener('click', () => {
+    console.log("hi")
     const productName = document.getElementById('productName') as HTMLInputElement;
     const Quantity = document.getElementById('quantity') as HTMLInputElement;
 
@@ -97,8 +105,8 @@ Button.addEventListener('click', () => {
 
     let price:number=0;
     const CalculatePriceObj = new CalculatePrice({ productname: name, quantity: quantity });
-    const type: string | undefined = CalculatePriceObj.findProduct();
-
+    const type: string | undefined = CalculatePriceObj.findProduct(CalculatePriceObj.productname);
+    console.log(CalculatePriceObj.productname)
     if (!type) {
         alert('Invalid Product Name');
     } else if (type === 'Fruit') {
